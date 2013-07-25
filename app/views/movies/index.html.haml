@@ -4,9 +4,9 @@
 %table#movies
   %thead
     %tr
-      %th{class: flash[:order_by] == 'title' && 'hilite', id: 'title_header'}= link_to "Movie Title", movies_path({order_by: 'title'})
+      %th{class: flash[:order_by] == 'title' && 'hilite'}= link_to "Movie Title", movies_path({order_by: 'title'}), html_options = {id: 'title_header'}
       %th Rating
-      %th{class: flash[:order_by] == 'release_date' && 'hilite', id: 'release_date_header'}= link_to "Release Date", movies_path({order_by: 'release_date'})
+      %th{class: flash[:order_by] == 'release_date' && 'hilite'}= link_to "Release Date", movies_path({order_by: 'release_date'}), html_options = {id: 'release_date_header'}
       %th More Info
   %tbody
     - @movies.each do |movie|
