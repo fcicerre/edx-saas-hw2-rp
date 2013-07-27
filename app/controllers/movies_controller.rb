@@ -7,13 +7,33 @@ class MoviesController < ApplicationController
   end
 
   def index
-    order_by_field = params[:order_by]
-    if order_by_field.nil?
-      @movies = Movie.all
-    else
-      @movies = Movie.order(order_by_field)
+    if !session.has_key?(:ratings)
+      session[:ratings] = Movie.get_all_ratings
     end
-    flash[:order_by] = order_by_field
+    if !session.has_key?(:order_by)
+      session[:order_by] = nil
+    end
+
+    if !params[:ratings].nil?
+      @ratings = params[:ratings].keys
+      session[:ratings] = @ratings
+    else
+      @ratings = session[:ratings]
+    end
+
+    if !params[:order_by].nil?
+      @order_by = params[:order_by]
+      session[:order_by] = @order_by
+    else
+      @order_by = session[:order_by]
+    end
+
+    if @order_by.nil?
+      @movies = Movie.where({rating: @ratings})
+    else
+      @movies = Movie.where({rating: @ratings}).order(@order_by)
+    end
+    @all_ratings = Movie.get_all_ratings
   end
 
   def new
