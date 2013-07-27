@@ -11,10 +11,10 @@ class MoviesController < ApplicationController
       session[:ratings] = Movie.get_all_ratings
     end
     if !session.has_key?(:order_by)
-      session[:order_by] = nil
+      session[:order_by] = ''
     end
-    redirect_page = false
 
+    redirect_page = false
     if !params[:ratings].nil?
       @ratings = params[:ratings].keys
       session[:ratings] = @ratings
