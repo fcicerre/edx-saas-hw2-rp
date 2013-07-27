@@ -13,12 +13,14 @@ class MoviesController < ApplicationController
     if !session.has_key?(:order_by)
       session[:order_by] = nil
     end
+    redirect_page = false
 
     if !params[:ratings].nil?
       @ratings = params[:ratings].keys
       session[:ratings] = @ratings
     else
       @ratings = session[:ratings]
+      redirect_page = true
     end
 
     if !params[:order_by].nil?
@@ -26,14 +28,24 @@ class MoviesController < ApplicationController
       session[:order_by] = @order_by
     else
       @order_by = session[:order_by]
+      redirect_page = true
     end
 
+    if redirect_page
+      ratings_hash = Hash.new()
+      @ratings.each do |rating|
+        ratings_hash[rating] = "1"
+      end
+      flash.keep
+      redirect_to movies_path({:order_by => @order_by, :ratings => ratings_hash})
+    end
+
+    @all_ratings = Movie.get_all_ratings
     if @order_by.nil?
       @movies = Movie.where({rating: @ratings})
     else
       @movies = Movie.where({rating: @ratings}).order(@order_by)
     end
-    @all_ratings = Movie.get_all_ratings
   end
 
   def new
